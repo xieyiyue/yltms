@@ -1,0 +1,40 @@
+html,body{
+    margin:0px;
+    padding:0px;
+    height: 100%;
+    overflow: hidden;
+}
+.bg{
+    min-width: 1200px;
+    height: 100%;
+    background-image: url(../img/signUp-bg.jpg);
+    background-position: center center;
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    padding-top: 10px;
+    box-sizing: border-box;
+}
+
+.bg::after{
+    content: '.';
+    display: block;
+    clear: both;
+    height: 0;
+    line-height: 0;
+    visibility: hidden;
+}
+.logo_box{
+    width: 390px;
+    height: 530px;
+    background: #fff;
+    border-radius: 10px;
+    float: left;
+    margin-left:16%;
+    margin-top:3%;
+    padding-top: 15px;
+}
+.box-title{
+    font-size: 22px;
+    margin-bottom: 20px;
+    margin-left: 37%;
+}

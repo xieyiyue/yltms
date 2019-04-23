@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link th:href="@{/layui/css/layui.css}" rel="stylesheet"/>
+    <script th:src="@{/layui/layui.js}"></script>
+    <script type="text/javascript" th:src="@{/jquery/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/encode64.js}"></script>
+
+</head>
+<body>
+    <div style="padding: 30px">
+        <form class="layui-form" action="">
+            <input type="hidden" name="id" th:value="${account.id}" class="layui-input">
+            <div class="layui-form-item">
+                <label class="layui-form-label">旧密码</label>
+                <div class="layui-input-inline">
+                    <input type="password" name="passwordO" required lay-verify="pass" placeholder="请输入6-16位密码" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">新密码</label>
+                <div class="layui-input-inline">
+                    <input type="password" name="passwordN" required lay-verify="pass" placeholder="请输入6-16位密码" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">确认密码</label>
+                <div class="layui-input-inline">
+                    <input type="password" name="password" required lay-verify="pass" placeholder="请再次输入密码" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <button style="display:none" id="onSubmit" lay-submit lay-filter="formSubmit">提交</button>
+        </form>
+    </div>
+<script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+
+    function onSubmit(){
+        $("#onSubmit").click();
+    }
+    layui.use(['form'], function(){
+        var form = layui.form;
+
+        form.verify({
+            pass: [
+                /^[\S]{6,12}$/
+                ,'密码必须6到12位，且不能出现空格'
+            ]
+        });
+
+        form.on('submit(formSubmit)', function(data){
+            var index_ = layer.load(1);
+            if(data.field.password !== data.field.passwordN){
+                layer.msg("两次密码输入不一致");
+                return false;
+            }
+            data.field.passwordN = "";
+            data.field.password = encode64(data.field.password);
+            data.field.passwordO = encode64(data.field.passwordO);
+            $.ajax({
+                url:[[@{user/update}]],
+                data:data.field,
+                type:"post",
+                dataType:"json",
+                success:function(result){
+                if(result.success){
+                    parent.layer.msg("保存成功");
+                    var index = parent.layer.getFrameIndex(window.name);
+                    parent.layer.close(index);
+                    // window.parent.location.replace(location.href)//刷新父级页面
+                    }else{
+                        layer.msg(result.msg);
+                    }
+                layer.close(index_);
+                },
+            });
+            return false;
+        });
+
+
+    })
+    /*]]>*/
+</script>
+</body>
+</html>

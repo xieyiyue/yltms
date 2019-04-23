@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link th:href="@{/layui/css/layui.css}" rel="stylesheet"/>
+    <script th:src="@{/layui/layui.js}"></script>
+    <script type="text/javascript" th:src="@{/jquery/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/encode64.js}"></script>
+    <script th:src="@{/js/utils.js}"></script>
+    <script type="text/javascript" th:src="@{/js/data.js}"></script>
+    <script type="text/javascript" th:src="@{/js/province.js}"></script>
+
+</head>
+<body>
+    <div style="padding: 30px">
+        <form class="layui-form" action="">
+            <input type="hidden" name="id" th:value="${obj.id}" class="layui-input">
+            <input type="hidden" name="address" th:value="${obj.address}" class="layui-input">
+            <div class="layui-form-item">
+                <label class="layui-form-label">选择地区</label>
+                <div class="layui-input-inline">
+                    <select name="prov" id="prov" lay-filter="prov" >
+                        <option value="">请选择省</option>
+                    </select>
+                </div>
+                <div class="layui-input-inline">
+                    <select name="city" id="city" lay-filter="city" >
+                        <option value="">请选择市</option>
+                    </select>
+                </div>
+                <div class="layui-input-inline">
+                    <select name="area" id="area" lay-filter="area" >
+                        <option value="">请选择县/区</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">门店</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="shopName" th:value="${obj.shopName}" required placeholder="请输入门店地址" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+
+             <button style="display:none" id="onSubmit" class="layui-btn" lay-submit lay-filter="formSubmit">立即提交</button>
+        </form>
+    </div>
+<script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+    $(function(){
+        defaults.v1 = [[${obj.prov}]];
+        defaults.v2 = [[${obj.city}]];
+        defaults.v3 = [[${obj.area}]];
+    });
+    function onSubmit(){
+        $("#onSubmit").click();
+    }
+
+    layui.use(['form'], function(){
+        var form = layui.form;
+
+        form.on('submit(formSubmit)', function(data){
+            var index_ = layer.load(1);
+            $.ajax({
+                url:[[@{/shop/save}]],
+                data:data.field,
+                type:"post",
+                dataType:"json",
+                success:function(result){
+                if(result.success){
+                    parent.layer.msg("保存成功");
+                    var index = parent.layer.getFrameIndex(window.name);
+                    parent.layer.close(index);
+                    window.parent.location.reload();
+                    //window.parent.location.replace(location.href)//刷新父级页面
+                }else{
+                    layer.msg(result.msg);
+                }
+                layer.close(index_);
+            },
+        });
+            return false;
+        });
+    })
+    /*]]>*/
+</script>
+</body>
+</html>

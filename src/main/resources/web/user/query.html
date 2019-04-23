@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="inc">
+<body>
+<div th:fragment="content">
+    <table class="layui-hide" id="userTable" lay-filter="test"></table>
+</div>
+<footer  th:fragment="footer">
+    <script type="text/html" id="toolbarDemo">
+        <div class="layui-input-block">
+            <div class="layui-input-inline">
+                <input id="username" type="text" placeholder="请输入用户名" class="layui-input">
+            </div>
+            <div class="layui-input-inline">
+                <button class="layui-btn" lay-event="search">搜索</button>
+            </div>
+            <!--<div class="layui-input-inline">
+                <button class="layui-btn">
+                    <i class="layui-icon">&#xe654;</i>
+                </button>
+            </div>-->
+        </div>
+    </script>
+    <script type="text/html" id="barDemo">
+        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="reset">重置密码</a>
+    </script>
+    <script th:src="@{/js/utils.js}"></script>
+    <script type="text/javascript" th:inline="javascript">
+        layui.use('table', function(){
+            var table = layui.table;
+            var userTable = table.render({
+                elem: '#userTable'
+                ,url:[[@{/user/getUserTable}]]
+                ,toolbar: '#toolbarDemo'
+                ,title: '用户数据表'
+                ,limit: 10
+                ,limits: [10, 15, 20]
+                ,cols: [
+                    [
+                    {type: 'checkbox', fixed: 'left'}
+                    ,{field:'id', title:'id',width:50 }
+                    ,{field:'username', title:'用户名', width:120,fixed: 'left', edit: 'text'}
+                    ,{field:'name', title:'姓名', width:120, edit: 'text'}
+                    ,{field:'sex', title:'性别', width:80, edit: 'text', templet: function(res){
+                            return '<em>'+ formatSex(res.sex) +'</em>'
+                        }}
+                    ,{field:'birthday', title:'生日', width:100, templet: function(res){
+                            return '<em>'+ formatDate("yyyy-MM-dd",new Date(res.birthday)) +'</em>'
+                        }}
+                    ,{field:'phone', title:'电话', width:150}
+                    ,{field:'mail', title:'邮箱', edit: 'text'}
+                    ,{field:'address', title:'地址'}
+                    ,{field:'createTime', title:'加入时间', width:120, templet: function(res){
+                            return '<em>'+ formatDate("yyyy-MM-dd hh:mm:ss",new Date(res.createTime)) +'</em>'
+                        }}
+                    ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:190}
+                ]
+            ]
+                ,page: true
+                ,done:function(res,curr,count){
+                    $(".layui-table-box").find("[data-field='id']").css("display","none");
+                }
+            });
+
+            table.on('toolbar(test)', function(obj){
+                var checkStatus = table.checkStatus(obj.config.id);
+                switch(obj.event){
+                    case 'add':
+                        layer.open({
+                            id: 'insert-form',
+                            type: 2,
+                            title:"修改密码",
+                            area: ['450px', '320px'],
+                            btn: ['确定'],
+                            yes: function(index, layero){
+                                insertSubmit();
+                            },
+                            content: [[@{/user/edit}]]
+                        });
+                        break;
+                    case 'search':
+                        userTable.reload({
+                            where: { //设定异步数据接口的额外参数，任意设
+                                username: $("#username").val()
+                            }
+                            ,page: {
+                                curr: 1 //重新从第 1 页开始
+                            }
+                        });
+                        break;
+                };
+            });
+
+            //监听行工具事件
+            table.on('tool(test)', function(obj){
+                var data = obj.data;
+                //console.log(obj)
+                if(obj.event === 'del'){
+                    layer.confirm('真的删除行么', function(index){
+                        var index_ = layer.load(1);
+                        $.ajax({
+                            url:[[@{/user/del}]],
+                            data:{"id":data.id},
+                            type:"post",
+                            dataType:"json",
+                            success:function(result){
+                            if(result.success){
+                                layer.msg("删除成功");
+                                userTable.reload();
+                                layer.close(index);
+                            }else{
+                                layer.msg(result.msg);
+                            }
+                            layer.close(index_);
+                        },
+                    });
+                    });
+                } else if(obj.event === 'edit'){
+                    layer.open({
+                        id: 'insert-form',
+                        type: 2,
+                        title:"修改",
+                        area: ['450px', '520px'],
+                        btn: ['确定'],
+                        yes: function(index, layero){
+                            insertSubmit();
+                        },
+                        content: [[@{/user/edit?id=}]]+data.id
+                    });
+                }else if(obj.event === 'reset'){
+                    layer.confirm('是否确定重置密码？', function(index){
+                        var index_ = layer.load(1);
+                        $.ajax({
+                            url:[[@{/user/update}]],
+                            data:{"id":data.id,"password":encode64("123456")},
+                            type:"post",
+                            dataType:"json",
+                            success:function(result){
+                            if(result.success){
+                                layer.msg("重置成功");
+                                userTable.reload();
+                                layer.close(index);
+                            }else{
+                                layer.msg(result.msg);
+                            }
+                            layer.close(index_);
+                        },
+                    });
+                    });
+                }
+            });
+
+            function insertSubmit(){
+                var frameId=document.getElementById('insert-form').getElementsByTagName("iframe")[0].id;
+                $('#'+frameId)[0].contentWindow.onSubmit();
+            }
+        });
+    </script>
+</footer>
+</body>
+</html>

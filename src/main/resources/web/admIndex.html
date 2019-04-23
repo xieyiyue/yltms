@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="inc">
+<body>
+<div th:fragment="content">
+    <button onclick="test1()">test1</button>
+    页面中正文内容：采用th:include + th:replace方式进行页面布局123
+</div>
+<footer  th:fragment="footer">
+    <script type="text/javascript" th:inline="javascript">
+        /*<![CDATA[*/
+        function test1() {
+            console.log("test1");
+        }
+        /*]]>*/
+    </script>
+</footer>
+</body>
+</html>

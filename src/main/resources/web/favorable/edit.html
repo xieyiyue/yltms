@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link th:href="@{/layui/css/layui.css}" rel="stylesheet"/>
+    <script th:src="@{/layui/layui.js}"></script>
+    <script type="text/javascript" th:src="@{/jquery/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/encode64.js}"></script>
+    <script th:src="@{/js/utils.js}"></script>
+
+</head>
+<body>
+    <div style="padding: 30px">
+        <form class="layui-form" action="">
+            <input type="hidden" name="id" th:value="${obj.id}" class="layui-input">
+            <div class="layui-form-item">
+                <label class="layui-form-label">车型</label>
+                <div class="layui-input-block">
+                    <select name="vehicleId" lay-filter="vehicleId" id="vehicleId">
+
+                    </select>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">折扣</label>
+                <div class="layui-input-block">
+                    <select name="discount" lay-filter="discount">
+                        <option value="" th:field="*{obj.discount}"></option>
+                        <option value="0.9" th:field="*{obj.discount}">9折</option>
+                        <option value="0.8" th:field="*{obj.discount}">8折</option>
+                        <option value="0.7" th:field="*{obj.discount}">7折</option>
+                        <option value="0.6" th:field="*{obj.discount}">6折</option>
+                        <option value="0.5" th:field="*{obj.discount}">5折</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">VIP专享</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="type" value="0" title="否" th:field="*{obj.isVip}">
+                    <input type="radio" name="type" value="1" title="是" th:field="*{obj.isVip}">
+                </div>
+            </div>
+             <button style="display:none" id="onSubmit" class="layui-btn" lay-submit lay-filter="formSubmit">立即提交</button>
+        </form>
+    </div>
+<script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+    function onSubmit(){
+        $("#onSubmit").click();
+    }
+    layui.use(['form'], function(){
+        var form = layui.form;
+
+        $.ajax({
+            url:[[@{/unverify/getVehicleInfo}]],
+        type:"post",
+            dataType:"json",
+            success:function(result) {
+            if (result.success) {
+                $("#vehicleId").empty();
+                $("#vehicleId").append('<option value="" ></option>');
+                for(var i =0;i<result.obj.length;i++){
+                    var item = result.obj[i];
+                    var option = '<option value="'+item.id+'" >'+item.brand+item.model+'</option>';
+                    $("#vehicleId").append(option);
+                    form.render("select");
+                }
+            }
+        }
+    });
+        form.on('submit(formSubmit)', function(data){
+            var index_ = layer.load(1);
+            $.ajax({
+                url:[[@{/favorable/save}]],
+                data:data.field,
+                type:"post",
+                dataType:"json",
+                success:function(result){
+                if(result.success){
+                    parent.layer.msg("保存成功");
+                    var index = parent.layer.getFrameIndex(window.name);
+                    parent.layer.close(index);
+                    window.parent.location.reload();
+                    //window.parent.location.replace(location.href)//刷新父级页面
+                    }else{
+                        layer.msg(result.msg);
+                    }
+                layer.close(index_);
+                },
+            });
+            return false;
+        });
+    })
+    /*]]>*/
+</script>
+</body>
+</html>

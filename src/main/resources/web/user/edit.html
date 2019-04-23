@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link th:href="@{/layui/css/layui.css}" rel="stylesheet"/>
+    <script th:src="@{/layui/layui.js}"></script>
+    <script type="text/javascript" th:src="@{/jquery/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/encode64.js}"></script>
+    <script th:src="@{/js/utils.js}"></script>
+
+</head>
+<body>
+    <div style="padding: 30px">
+        <form class="layui-form" action="">
+            <input type="hidden" name="id" th:value="${obj.id}" class="layui-input">
+            <div class="layui-form-item">
+                <label class="layui-form-label">姓名</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="name" th:value="${obj.name}" required lay-verify="required" placeholder="请输入姓名" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">性别</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="sex" value="1" title="男" th:field="*{obj.sex}">
+                    <input type="radio" name="sex" value="2" title="女" th:field="*{obj.sex}">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">生日</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="birthday" th:value="${#dates.format(obj.birthday, 'yyyy-MM-dd')}"  id="date" lay-verify="date" placeholder="请选择出生日期" autocomplete="off" class="layui-input test-item">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">电话</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="phone" th:value="${obj.phone}" required lay-verify="phone" placeholder="请输入联系方式" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">邮箱</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="mail" th:value="${obj.mail}" required lay-verify="mail" placeholder="请输入邮箱" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">地址</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="address" th:value="${obj.address}" placeholder="请输入地址" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+             <button style="display:none" id="onSubmit" class="layui-btn" lay-submit lay-filter="formSubmit">立即提交</button>
+        </form>
+    </div>
+<script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+
+    function onSubmit(){
+        $("#onSubmit").click();
+    }
+    layui.use(['form','laydate'], function(){
+        var form = layui.form;
+        var laydate = layui.laydate;
+
+        lay('.test-item').each(function(){
+            laydate.render({
+                elem: this
+                ,format:'yyyy-MM-dd'
+                ,type:'date'
+                ,trigger: 'click'
+            });
+        });
+
+        form.verify({
+            phone: [
+                /^((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(18[0,5-9]))\d{8}$/
+                ,'手机号格式错误'
+            ],
+            mail: [
+                /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/
+                ,'邮箱格式错误'
+            ]
+        });
+
+        form.on('submit(formSubmit)', function(data){
+            var index_ = layer.load(1);
+            $.ajax({
+                url:[[@{/user/update}]],
+                data:data.field,
+                type:"post",
+                dataType:"json",
+                success:function(result){
+                if(result.success){
+                    parent.layer.msg("保存成功");
+                    var index = parent.layer.getFrameIndex(window.name);
+                    parent.layer.close(index);
+                    window.parent.location.reload();
+                    //window.parent.location.replace(location.href)//刷新父级页面
+                    }else{
+                        layer.msg(result.msg);
+                    }
+                layer.close(index_);
+                },
+            });
+            return false;
+        });
+    })
+    /*]]>*/
+</script>
+</body>
+</html>

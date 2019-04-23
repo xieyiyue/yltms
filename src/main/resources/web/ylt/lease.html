@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>亿路通汽车</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <script type="application/x-javascript">
+        addEventListener("load", function () {
+            setTimeout(hideURLbar, 0);
+        }, false);
+
+        function hideURLbar() {
+            window.scrollTo(0, 1);
+        }
+    </script>
+    <link rel="stylesheet" th:href="@{/css/owl.carousel.css}" type="text/css" media="all">
+    <link rel="stylesheet" th:href="@{/css/owl.theme.css}" type="text/css" media="all">
+    <!-- css files -->
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"> <!-- Bootstrap-Core-CSS -->
+    <link rel="stylesheet" th:href="@{/css/style.css}" type="text/css" media="all"/> <!-- Style-CSS -->
+    <link rel="stylesheet" th:href="@{/css/fontawesome-all.css}"> <!-- Font-Awesome-Icons-CSS -->
+    <link th:href="@{/layui/css/layui.css}" rel="stylesheet"/>
+    <link href="//fonts.googleapis.com/css?family=Raleway:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&amp;subset=latin-ext" rel="stylesheet">
+    <link th:href="@{/css/toastr.min.css}" rel="stylesheet" />
+    <link th:href="@{/css/ladda-theme.scss}" rel="stylesheet"/>
+    <link th:href="@{/css/bootstrapValidator.min.css}" rel="stylesheet"/>
+    <link th:href="@{/css/bootstrap-datetimepicker.min.css}" rel="stylesheet"/>
+    <link th:href="@{/css/city-picker.css}" rel="stylesheet" type="text/css" />
+    <link th:href="@{/css/main.css}" rel="stylesheet" type="text/css" />
+
+    <script type="text/javascript" th:src="@{/js/jquery-2.1.4.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/popper.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/encode64.js}"></script>
+    <script type="text/javascript" th:src="@{/js/toastr.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/ladda.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/spin.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/bootstrapValidator.js}"></script>
+    <script type="text/javascript" th:src="@{/js/zh_CN.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/bootstrap-datetimepicker.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/bootstrap-datetimepicker.zh-CN.js}"></script>
+    <script type="text/javascript" th:src="@{/js/city-picker.data.js}"></script>
+    <script type="text/javascript" th:src="@{/js/city-picker.js}"></script>
+    <script type="text/javascript" th:src="@{/js/main.js}"></script>
+    <script type="text/javascript" th:src="@{/js/utils.js}"></script>
+
+    <style>
+        .carItem img{
+            border: 0;
+        }
+        .carItem div div{
+            border-bottom: 2px solid #bbb;
+        }
+        .city-picker-span {
+            border: 1px solid #646464;
+            background-color: #252525;
+            border-radius: 0.25rem;
+            width:100% !important;
+        }
+        .form-control{
+            border: 1px solid #646464;
+            background-color: #252525;
+            border-radius: 0.25rem;
+            color: #a0a0a0;
+        }
+
+        .city-picker-span > .title > span {
+            color: #a0a0a0;
+        }
+        .city-picker-span.focus, .city-picker-span.open {
+            border-bottom-color: #646464;
+        }
+        .city-select-wrap {
+            width: 400px;
+        }
+    </style>
+
+</head>
+
+<body>
+
+<!--/banner-->
+<div class="top-bar_sub_w3layouts container-fluid">
+    <div class="row">
+
+        <div class="col-md-4 col-sm-6 log-icons mt-2">
+            <p class="py-2"><i class="fas fa-phone"></i> 服务热线 : 12(00) 123 1234</p>
+        </div>
+
+        <div class="col-md-4 col-sm-6 logo">
+            <a class="navbar-brand" href="index.html">
+                <i class="fas fa-car"></i> 亿路通租车</a>
+        </div>
+
+
+        <div id="noLogin" class="col-md-4 top-forms mt-md-3 mt-2 mb-md-0 mb-3">
+				<span class="mx-lg-4 mx-md-2  mx-1">
+					<a href="#" data-toggle="modal" aria-pressed="false" data-target="#loginPanel">
+						<i class="fas fa-lock"></i> 登录</a>
+				</span>
+            <span>
+					<a href="#" data-toggle="modal" data-target="#registeredPanel">
+						<i class="fas fa-user"></i> 注册</a>
+				</span>
+
+        </div>
+
+        <div id="yesLogin" class="col-md-4 top-forms mt-md-3 mt-2 mb-md-0 mb-3">
+            <div class="btn-group">
+                <button id="nameSpan" style="color:#fff" type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-user"></i>
+                </button>
+                <div class="dropdown-menu">
+                    <a href="#" class="dropdown-item" data-toggle="modal" aria-pressed="false" data-target="#changePass">
+                        <i class="fas fa-lock"></i> 修改密码</a>
+                    <a href="#" class="dropdown-item" data-toggle="modal" aria-pressed="false" data-target="#changePass">
+                        <i class="fas fa-superpowers"></i> 升级VIP</a>
+                    <a href="#" class="dropdown-item" data-toggle="modal" aria-pressed="false" data-target="#changePass">
+                        <i class="fas fa-money-bill-alt"></i> 充值</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" th:href="@{/route/logout}">
+                        <i class="fas fa-outdent"></i> 安全退出</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="banner" id="home">
+    <!-- header -->
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light top-header">
+            <button class="navbar-toggler mx-auto" type="button" data-toggle="collapse"
+                    data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item">
+                        <a class="nav-link ml-lg-0" th:href="@{/}">首页
+                            <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" th:href="@{/route/browseVehicle}">立即选车
+
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/order/order}">我的订单</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/order/order}">帮助信息</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/order/order}">关于我们</a>
+                    </li>
+                </ul>
+
+            </div>
+        </nav>
+    </header>
+</div>
+
+<section class="bookingform py-5">
+    <div class="container-fluid pt-lg-5">
+        <div class="col-lg-3 col-sm-6 mb-sm-0 mb-5 footer-grid-agileits-w3ls text-left" style="max-width: 100%">
+            <div class="tech-btm" style="margin-left: 5%">
+                <h3 class="mb-sm-5 mb-4">选择车型</h3>
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    <button type="button" class="btn btn-secondary" onclick="loadCarItem('')">全部</button>
+                    <button type="button" class="btn btn-secondary" onclick="loadCarItem('轿车')">轿车</button>
+                    <button type="button" class="btn btn-secondary" onclick="loadCarItem('SUV')">SUV</button>
+                    <button type="button" class="btn btn-secondary" onclick="loadCarItem('MPV')">MPV</button>
+                </div>
+                <div id="carModelItem"></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer class="py-sm-5 py-4 px-md-5 px-3">
+    <div class="container-fluid pt-lg-5">
+        <div class="row">
+            <div class="col-lg-3 col-sm-6 mb-lg-0 mb-5 footer-grid-agileits-w3ls1 text-left">
+                <h3 class="mb-sm-5 mb-4 mt-sm-0 mt-4">About Company</h3>
+                <p>Vestibulum vitae libero consectetur, orn areeros id, congue metus. Aliquam erat volutpat. Donec
+                    rhoncus risus vitae ullam corper pretium. Duis vitae nisl neque. Aliquam tincidunt, tellus quis
+                    hendrerit tincidunt congue metus. </p>
+                <a href="#" class="read">Know More <i class="fas fa-caret-right"></i></a>
+            </div>
+            <div class="col-lg-3 col-sm-6 mb-lg-0 mb-5 footer-grid-agileits-w3ls1 text-left">
+                <h3 class="mb-sm-5 mb-4">Locate Us</h3>
+                <ul class="w3ls-footer-bottom-list">
+                    <li><span class="fas fa-map-marker"></span> 3481 Jack Street Beverly Jack Hills<span> 90210 Block, USA </span>
+                    </li>
+                    <li><span class="fas fa-envelope"></span> <a href="mailto:name@example.com"> mail@example.com</a>
+                    </li>
+                    <li><span class="fas fa-phone"></span> +112 367 896 2449</li>
+                    <li><span class="fas fa-fax"></span> +112 367 896 2449</li>
+                    <li><span class="fas fa-globe"></span> <a href="#"> www.websitename.com</a></li>
+                    <li><span class="fas fa-clock"></span> Office Time : 8:00 a.m - 6:00 p.m</li>
+                </ul>
+            </div>
+            <div class="col-lg-3 col-sm-6 mb-sm-0 mb-5 footer-grid-agileits-w3ls text-left">
+                <div class="tech-btm">
+                    <h3 class="mb-sm-5 mb-4">Latest Posts</h3>
+                    <div class="blog-grids row mb-3">
+                        <div class="col-4 pr-0 blog-grid-left">
+                            <a href="#">
+                                <img th:src="@{/images/blog1.jpg}" class="img-fluid" alt="">
+                            </a>
+                        </div>
+                        <div class="col-8 blog-grid-right">
+
+                            <h5>
+                                <a href="#">Pellentesque dui, non felis. Maecenas male non felis </a>
+                            </h5>
+                            <div class="sub-meta">
+								<span>
+									<i class="far fa-clock"></i> 19 Apr, 2018</span>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="blog-grids row mb-3">
+                        <div class="col-4 pr-0 blog-grid-left">
+                            <a href="#">
+                                <img th:src="@{/images/blog2.jpg}" class="img-fluid" alt="">
+                            </a>
+                        </div>
+                        <div class="col-8 blog-grid-right">
+
+                            <h5>
+                                <a href="#">Pellentesque dui, non felis. Maecenas male non felis </a>
+                            </h5>
+                            <div class="sub-meta">
+								<span>
+									<i class="far fa-clock"></i> 20 Apr, 2018</span>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="blog-grids row">
+                        <div class="col-4 pr-0 blog-grid-left">
+                            <a href="#">
+                                <img th:src="@{/images/blog3.jpg}" class="img-fluid" alt="">
+                            </a>
+                        </div>
+                        <div class="col-8 blog-grid-right">
+
+                            <h5>
+                                <a href="#">Pellentesque dui, non felis. Maecenas male non felis </a>
+                            </h5>
+                            <div class="sub-meta">
+								<span>
+									<i class="far fa-clock"></i> 21 Apr, 2018</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <!-- subscribe -->
+            <div class="col-lg-3 col-sm-6 subscribe-main footer-grid-agileits-w3ls text-left">
+                <h3 class="mb-sm-5 mb-4">Newsletter</h3>
+                <div class="subscribe-main text-left">
+                    <div class="subscribe-form">
+                        <form action="#" method="post" class="subscribe_form">
+                            <input class="form-control" type="email" placeholder="Enter Your Email..." required="">
+                            <button type="submit" class="btn1 btn-primary submit"><i class="fas fa-paper-plane"
+                                                                                     aria-hidden="true"></i></button>
+                        </form>
+                    </div>
+                </div>
+                <!-- //subscribe -->
+                <div class="footer-social">
+                    <div class="copyrighttop">
+                        <h3 class="mb-sm-5 mb-4">Stay In Touch</h3>
+                        <ul>
+                            <li class="mr-1">
+                                <a class="facebook" href="#">
+                                    <i class="fab fa-facebook-f"></i>
+                                </a>
+                            </li>
+                            <li class="mr-1">
+                                <a class="facebook" href="#">
+                                    <i class="fab fa-twitter"></i>
+                                </a>
+                            </li>
+                            <li class="mr-1">
+                                <a class="facebook" href="#">
+                                    <i class="fab fa-google-plus-g"></i>
+                                </a>
+                            </li>
+                            <li class="mr-1">
+                                <a class="facebook" href="#">
+                                    <i class="fab fa-pinterest-p"></i>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="facebook" href="#">
+                                    <i class="fab fa-linkedin-in"></i>
+                                </a>
+                            </li>
+                        </ul>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- copyright -->
+        <div class="footer-cpy text-center pt-sm-5 mt-sm-5 mt-4 pt-3">
+            <div class="w3layouts-agile-copyrightbottom">
+                <p>© 2018 Taxi Cab. All Rights Reserved | Design by
+                    <a href="http://w3layouts.com/">W3layouts</a>
+                </p>
+
+            </div>
+        </div>
+        <!-- //copyright -->
+    </div>
+</footer>
+
+<div class="modal fade" id="loginPanel" tabindex="-1" role="dialog" aria-labelledby="loginModel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="loginModel">登录你的账户</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="username" class="col-form-label">用户名</label>
+                    <input type="text" class="form-control" placeholder="用户名" id="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password" class="col-form-label">密码</label>
+                    <input type="password" class="form-control" placeholder="密码" id="password" required>
+                </div>
+
+                <div class="right-w3l">
+                    <input type="submit" id="sub" class="form-control" value="登录">
+                </div>
+                <p class="text-center dont-do text-white mt-3">没有账户?
+                    <a href="#" data-toggle="modal" data-target="#registeredPanel" class="text-white">
+                        立即注册</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+    $(function(){
+
+
+    });
+    $("#sub").on("click",function(){
+        login();
+    });
+    function login(){
+        var username = $("#username").val();
+        var password = $("#password").val();
+        var empPattern = /^\s*$/;
+        if (empPattern.test(username) || empPattern.test(password)){
+            toastr.warning("用户名或密码不能为空");
+            return;
+        }
+        password = encode64(password);
+        $.ajax({
+            url:[[@{/login}]],
+            data:{"username":username,"password":password, "type":"2"},
+            type:"post",
+                dataType:"json",
+                success:function(result){
+                if(result.success){
+                    window.location.reload();
+                }else{
+                    toastr.warning(result.msg);
+                }
+            }
+        })
+    }
+    /*]]>*/
+</script>
+<div class="modal fade" id="changePass" tabindex="-1" role="dialog" aria-labelledby="changePassModel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="changePassModel">修改密码</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="oldPassword" class="col-form-label">旧密码</label>
+                    <input type="password" class="form-control" lay-verify="pass" placeholder="旧密码" id="oldPassword"
+                           required="">
+                </div>
+                <div class="form-group">
+                    <label for="newPassword" class="col-form-label">新密码</label>
+                    <input type="password" class="form-control" lay-verify="pass" placeholder="新密码" id="newPassword"
+                           required="">
+                </div>
+                <div class="form-group">
+                    <label for="conPassword" class="col-form-label">确认密码</label>
+                    <input type="password" class="form-control" lay-verify="pass" placeholder="确认密码" id="conPassword"
+                           required="">
+                </div>
+
+                <div class="right-w3l">
+                    <input type="hidden" id="accountId"/>
+                    <input type="submit" id="subPass" class="form-control" value="确认">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+    $(function(){
+
+    });
+    $("#subPass").on("click",function(){
+        editPass();
+    });
+    function editPass(){
+        var passwordO = $("#oldPassword").val();
+        var password = $("#newPassword").val();
+        var conPassword = $("#conPassword").val();
+        var id = $("#accountId").val();
+        if(password !== conPassword){
+            toastr.warning("两次密码输入不一致");
+            return false;
+        }
+        password = encode64(password);
+        passwordO = encode64(passwordO);
+        $.ajax({
+            url:[[@{/user/update}]],
+        data:{"password":password,"passwordO":passwordO,"id":id},
+        type:"post",
+            dataType:"json",
+            success:function(result){
+            if(result.success){
+                toastr.success("保存成功");
+                window.location.reload();
+                }else{
+                    toastr.warning(result.msg);
+                }
+            },
+        });
+
+    }
+    /*]]>*/
+</script>
+<div class="modal fade" id="leasePanel" tabindex="-1" role="dialog" aria-labelledby="leaseModel" aria-hidden="true">
+    <div class="modal-dialog" style="max-width: 100% !important;">
+        <div class="lease-modal-content">
+            <div class="row">
+        <div class="col-lg-4 book-appointment p-sm-5 py-5 px-4">
+            <h2>取车</h2>
+            <div class="book-agileinfo-form">
+                <form id="orderForm" action="#" method="post">
+                    <input type="hidden" id="vehicleId" name="vehicleId">
+                    <input type="hidden" id="rent" name="rent">
+                    <input type="hidden" id="userId" name="userId">
+                    <div class="row main-agile-sectns">
+                        <div class="col-md-12 agileits-btm-spc form-text1">
+                            <input type="text" id="obtainTime" name="obtainTime" data-date-format="yyyy-mm-dd hh:ii">
+                        </div>
+                    </div>
+                    <div class="row ">
+                        <div class="col-md-4 agileits-btm-spc form-text1">
+                            <!--<input id="obtainCity" name="obtainCity" class="form-control" readonly type="text" data-toggle="city-picker">-->
+                            <select id="obtainProv" name="obtainProv" class="form-control" onchange="changeProv('obtain')">
+                                <option value="">请选择</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 agileits-btm-spc form-text1">
+                            <!--<input id="obtainCity" name="obtainCity" class="form-control" readonly type="text" data-toggle="city-picker">-->
+                            <select id="obtainCity" name="obtainCity" class="form-control" onchange="changeCity('obtain')">
+                                <option value="">请选择</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 agileits-btm-spc form-text1">
+                            <!--<input id="obtainCity" name="obtainCity" class="form-control" readonly type="text" data-toggle="city-picker">-->
+                            <select id="obtainArea" name="obtainArea" class="form-control" onchange="changeArea('obtain')">
+                                <option value="">请选择</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row ">
+                        <div class="col-md-12 agileits-btm-spc form-text1">
+                            <!--<input id="obtainCity" name="obtainCity" class="form-control" readonly type="text" data-toggle="city-picker">-->
+                            <select id="obtainShop" name="obtainShop" class="form-control">
+                                <option value="">请选择</option>
+                            </select>
+                        </div>
+                    </div>
+                    <h2 class="sub-head-w3ls">还车</h2>
+                    <div class="row main-agile-sectns">
+                        <div class="col-md-12 agileits-btm-spc form-text1">
+                            <input type="text" id="returnTime" name="returnTime" data-date-format="yyyy-mm-dd hh:ii">
+                        </div>
+                    </div>
+                    <div class="row ">
+                        <div class="col-md-4 agileits-btm-spc form-text1">
+                            <!--<input id="returnCity" name="returnCity" class="form-control" readonly type="text" data-toggle="city-picker">-->
+                            <select id="returnProv" name="returnProv" class="form-control" onchange="changeProv('return')">
+                                <option value="">请选择</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 agileits-btm-spc form-text1">
+                            <!--<input id="returnCity" name="returnCity" class="form-control" readonly type="text" data-toggle="city-picker">-->
+                            <select id="returnCity" name="returnCity" class="form-control" onchange="changeCity('return')">
+                                <option value="">请选择</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 agileits-btm-spc form-text1">
+                            <!--<input id="returnCity" name="returnCity" class="form-control" readonly type="text" data-toggle="city-picker">-->
+                            <select id="returnArea" name="returnArea" class="form-control" onchange="changeArea('return')">
+                                <option value="">请选择</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row ">
+                        <div class="col-md-12 agileits-btm-spc form-text1">
+                            <!--<input id="returnCity" name="returnCity" class="form-control" readonly type="text" data-toggle="city-picker">-->
+                            <select id="returnShop" name="returnShop" class="form-control">
+                                <option value="">请选择</option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+                <input id="leaseSubmit" type="submit" value="确认">
+                <input id="leaseClose" type="reset" value="关闭">
+            </div>
+        </div>
+        <div class="col-lg-1 mt-md-5"></div>
+        <div id="imgDesc" class="col-lg-6 mt-md-5"></div>
+        <div class="col-lg-1 mt-md-5"></div>
+    </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+    $(function(){
+        $("#obtainTime").val(formatDate("yyyy-MM-dd hh:mm", new Date()));
+        $("#returnTime").val(formatDate("yyyy-MM-dd hh:mm", new Date(new Date().getTime() + 24*60*60*1000)));
+        loadAddress("return");
+        loadAddress("obtain");
+    });
+    $('#obtainTime,#returnTime').datetimepicker(
+        {
+            language: 'zh-CN',
+            autoclose: true,
+            todayBtn : true
+        }
+    );
+    $("#leaseClose").on("click",function(){
+        $("#leasePanel").modal('hide');
+    });
+    $("#leaseSubmit").on("click",function(){
+        var data = $("#orderForm").serializeObject();
+        data.obtainTime = new Date(data.obtainTime + ':00');
+        data.returnTime = new Date(data.returnTime + ':00');
+        if(data.userId){
+            $.ajax({
+                url:[[@{/order/save}]],
+            data:data,
+                type:"post",
+                dataType:"json",
+                success:function(result){
+                if(result.success){
+                    toastr.success("订单提交成功，请支付");
+                    $("#leasePanel").modal("hide");
+                }else{
+                    toastr.error(result.msg);
+                }
+            }
+        });
+        }else{
+            toastr.warning("请先登录");
+            return;
+        }
+    });
+    function lease(id,imgSrc,rent){
+        var account = [[${account}]];
+        if(!account){
+            toastr.warning("请先登录");
+            return;
+        }
+        $("#imgDesc").empty();
+        $("#imgDesc").append('<img src="'+imgSrc+'" alt="" class="img-fluid">');
+        $("#vehicleId").val(id);
+        $("#rent").val(rent);
+        $("#userId").val(account.id);
+        $("#leasePanel").modal('show');
+    }
+    function loadAddress(id) {
+        $.ajax({
+            url:[[@{/unverify/getAddress}]],
+        type:"post",
+            dataType:"json",
+            success:function(result){
+            if(result.success){
+                for(var i =0;i<result.obj.length;i++){
+                    $("#"+id+"Prov").append('<option value="'+result.obj[i]+'">'+result.obj[i]+'</option>')
+                }
+
+            }else{
+                toastr.warning(result.msg);
+            }
+        }
+    })
+    }
+    function changeProv(id){
+        var prov = $("#"+id+"Prov").val();
+        if(prov){
+            $.ajax({
+                url:[[@{/unverify/getAddress}]],
+            type:"post",
+                data:{"prov":prov},
+            dataType:"json",
+                success:function(result){
+                if(result.success){
+                    resetObCity(id);
+                    for(var i =0;i<result.obj.length;i++){
+                        $("#"+id+"City").append('<option value="'+result.obj[i]+'">'+result.obj[i]+'</option>');
+                    }
+                    resetObArea(id);
+                    resetObShop(id);
+                }else{
+                    toastr.warning(result.msg);
+                }
+            }
+        })
+        }else{
+            resetObCity(id);
+            resetObArea(id);
+            resetObShop(id);
+        }
+    }
+    function changeCity(id){
+        var prov = $("#"+id+"Prov").val();
+        var city = $("#"+id+"City").val();
+        if(city){
+            $.ajax({
+                url:[[@{/unverify/getAddress}]],
+            type:"post",
+                data:{"prov":prov, "city":city},
+            dataType:"json",
+                success:function(result){
+                if(result.success){
+
+                    resetObArea(id);
+                    for(var i =0;i<result.obj.length;i++){
+                        $("#"+id+"Area").append('<option value="'+result.obj[i]+'">'+result.obj[i]+'</option>');
+                    }
+                    resetObShop(id);
+                }else{
+                    toastr.warning(result.msg);
+                }
+            }
+        })
+        }else{
+            resetObArea(id);
+            resetObShop(id);
+        }
+    }
+    function changeArea(id){
+        var prov = $("#"+id+"Prov").val();
+        var city = $("#"+id+"City").val();
+        var area = $("#"+id+"Area").val();
+        if(area){
+            $.ajax({
+                url:[[@{/unverify/getAddress}]],
+            type:"post",
+                data:{"prov":prov, "city":city, "area": area},
+            dataType:"json",
+                success:function(result){
+                if(result.success){
+                    resetObShop(id);
+                    for(var i =0;i<result.obj.length;i++){
+                        $("#"+id+"Shop").append('<option value="'+result.obj[i]+'">'+result.obj[i]+'</option>');
+                    }
+                }else{
+                    toastr.warning(result.msg);
+                }
+            }
+        })
+        }else{
+            resetObShop(id);
+        }
+    }
+    function resetObCity(id){
+        $("#"+id+"City").empty();
+        $("#"+id+"City").append('<option value="">请选择</option>');
+    }
+    function resetObArea(id){
+        $("#"+id+"Area").empty();
+        $("#"+id+"Area").append('<option value="">请选择</option>');
+    }
+    function resetObShop(id){
+        $("#"+id+"Shop").empty();
+        $("#"+id+"Shop").append('<option value="">请选择</option>');
+    }
+    /*]]>*/
+</script>
+<div class="modal fade" id="registeredPanel" tabindex="-1" role="dialog" aria-labelledby="regModel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="regModel">注册你的账户</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="registeredForm" class="layui-form" action="">
+                    <div class="form-group">
+                        <label class="col-form-label">用户名</label>
+                        <input type="text" class="form-control" placeholder="用户名" name="username" />
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label">邮箱</label>
+                        <input type="email" class="form-control" placeholder="邮箱" name="mail" />
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label">密码</label>
+                        <input type="password" class="form-control" placeholder="密码" name="password"/>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label">确认密码</label>
+                        <input type="password" class="form-control" placeholder="确认密码" name="ConfirmPassword" />
+                    </div>
+                </form>
+                <div class="right-w3l">
+                    <input type="submit" class="form-control" id="regSub" value="注册">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+    $(function(){
+        $('#registeredForm').bootstrapValidator({
+            message: 'This value is not valid',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                password: {
+                    message: '密码验证失败',
+                    validators: {
+                        notEmpty: {
+                            message: '密码不能为空'
+                        },
+                        regexp: {
+                            regexp: /^[\S]{6,12}$/,
+                            message: '密码必须6到12位，且不能出现空格'
+                        }
+                    }
+                },
+                ConfirmPassword: {
+                    message: '密码验证失败',
+                    validators: {
+                        notEmpty: {
+                            message: '密码不能为空'
+                        },
+                        regexp: {
+                            regexp: /^[\S]{6,12}$/,
+                            message: '密码必须6到12位，且不能出现空格'
+                        }
+                    }
+                },
+                mail: {
+                    validators: {
+                        notEmpty: {
+                            message: '邮箱地址不能为空'
+                        },
+                        regexp: {
+                            regexp: /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/,
+                            message: '邮箱格式错误'
+                        }
+                    }
+                },
+                username: {
+                    validators: {
+                        notEmpty: {
+                            message: '用户名不能为空'
+                        },
+                        regexp: {
+                            regexp: /^[a-zA-Z0-9_-]{4,16}$/,
+                            message: '用户名必须4到16位（数字，字码，下划线，减号）'
+                        }
+                    }
+                }
+            }
+        });
+
+    });
+    $("#regSub").on("click",function(){
+        registered();
+    });
+    function registered(){
+        var bootstrapValidator = $("#registeredForm").data('bootstrapValidator').isValid();
+        if(bootstrapValidator){
+            var data = $("#registeredForm").serializeObject();
+            if(data.password !== data.ConfirmPassword){
+                toastr.error("两次密码输入不一致");
+                return false;
+            }
+            data.ConfirmPassword = "";
+            data.password = encode64(data.password);
+            $.ajax({
+                url:[[@{/user/saveUser}]],
+            data:data,
+                type:"post",
+                dataType:"json",
+                success:function(result){
+                if(result.success){
+                    toastr.success("保存成功，请登录");
+                    $("#registeredPanel").modal("hide");
+                }else{
+                    toastr.error(result.msg);
+                }
+            }
+        });
+        }
+    }
+    /*]]>*/
+</script>
+
+<script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script> <!-- Necessary-JavaScript-File-For-Bootstrap -->
+<script type="text/javascript" th:src="@{/js/wickedpicker.js}"></script>
+<script th:src="@{/js/jquery-ui.js}"></script>
+<script th:src="@{/js/owl.carousel.js}"></script>
+<script th:src="@{/js/responsiveslides.min.js}"></script>
+<script th:src="@{/js/SmoothScroll.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/move-top.js}"></script>
+<script type="text/javascript" th:src="@{/js/easing.js}"></script>
+<script type="text/javascript">
+    jQuery(document).ready(function ($) {
+        $(".scroll").click(function (event) {
+            event.preventDefault();
+            $('html,body').animate({scrollTop: $(this.hash).offset().top}, 1000);
+        });
+    });
+</script>
+<script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+    $(function () {
+        $().UItoTop({easingType: 'easeOutQuart'});
+        var account = [[${account}]];
+        if (account) {
+            $("#noLogin").hide();
+            $("#yesLogin").show();
+            $("#nameSpan").append(account.username);
+            $("#accountId").val(account.id);
+        } else {
+            $("#noLogin").show();
+            $("#yesLogin").hide();
+        }
+        loadCarItem();
+    });
+
+    function loadCarItem(type){
+        $.ajax({
+            url:[[@{/unverify/getVehicleInfo}]],
+            data:{"type":type},
+            type:"post",
+            dataType:"json",
+            success:function(result) {
+                if (result.success) {
+                    $("#carModelItem").empty();
+                    for(var i =0;i<result.obj.length;i++){
+                        var item = result.obj[i];
+                        var imgSrc = [[@{/uploaded/}]]+item.imgPath;
+                        var carModelItem = '<div class="blog-grids row mb-3 carItem">' +
+                            '<div class="col-1"></div>' +
+                            '<div class="col-3 pr-0 blog-grid-left">' +
+                            '<img src="'+imgSrc+'" alt="" class="img-fluid"></div>' +
+                            '<div class="col-3 blog-grid-right" style="margin-top:3%">' +
+                            '<h2><span>'+ item.brand+item.model+'</span></h2>' +
+                            '<div class="sub-meta">' +
+                            '<h3><span><i class="far fa-id-card"></i>'+
+                            item.exhaust+'厢|'+item.type+'|'+item.cubicles+'|乘坐'+item.seatNum+'人</span></h3></div></div>' +
+                            '<div class="col-1 blog-grid-right" style="margin-top:3%"><h2><span style="color:#fabe00">￥'+
+                            item.rent+'</span></h2><h4><span>/日均</span></h4></div><div class="col-4" style="margin-top:4%"><button onclick="lease(\''+item.id+'\',\''+imgSrc+'\',\''+item.rent+'\')" type="button" class="btn btn-warning" style="width:20%;height:50px"><span style="color:#fff;font-weight:700">租车</span></button></div></div>';
+                        $("#carModelItem").append(carModelItem);
+
+                    }
+                }
+            }
+        });
+    }
+    function lease(id,imgSrc,rent){
+        var account = [[${account}]];
+        if(!account){
+            toastr.warning("请先登录");
+            return;
+        }
+        $("#imgDesc").empty();
+        $("#imgDesc").append('<img src="'+imgSrc+'" alt="" class="img-fluid">');
+        $("#vehicleId").val(id);
+        $("#rent").val(rent);
+        $("#userId").val(account.id);
+        $("#leasePanel").modal('show');
+    }
+    /*]]>*/
+</script>
+</body>
+</html>

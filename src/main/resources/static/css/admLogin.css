@@ -1,0 +1,51 @@
+html,body{
+    margin:0px;
+    padding:0px;
+    height: 100%;
+    overflow: hidden;
+}
+.bg{
+    min-width: 1200px;
+    height: 100%;
+    background-image: url(../img/login.png);
+    background-position: center center;
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    padding-top: 10px;
+    box-sizing: border-box;
+}
+
+.bg::after{
+    content: '.';
+    display: block;
+    clear: both;
+    height: 0;
+    line-height: 0;
+    visibility: hidden;
+}
+
+.login_box{
+    width: 500px;
+    height: 300px;
+    background: rgba(22,19,14,0.3);
+    border-radius: 10px;
+    float: left;
+    margin-left:6%;
+    margin-top:180px;
+}
+
+.logo_box{
+    padding: 35px;
+    margin-left: 52%;
+    margin-top: 20%;
+    background-color: #fff;
+    width: 20%;
+    text-align: center;
+
+}
+.logo_box input{
+    margin-top: 20px;
+}
+.logo_box button{
+    margin-top: 20px;
+}

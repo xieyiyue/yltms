@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link th:href="@{/layui/css/layui.css}" rel="stylesheet"/>
+    <script th:src="@{/layui/layui.js}"></script>
+    <script type="text/javascript" th:src="@{/jquery/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/encode64.js}"></script>
+    <script th:src="@{/js/utils.js}"></script>
+
+</head>
+<body>
+    <div style="padding: 30px">
+        <form class="layui-form" action="">
+            <input type="hidden" name="id" th:value="${obj.id}" class="layui-input">
+            <div class="layui-form-item">
+                <label class="layui-form-label">车牌</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="license" th:value="${obj.license}" required lay-verify="license" placeholder="请输入车牌号" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">品牌</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="brand" th:value="${obj.brand}" required lay-verify="required" placeholder="请输入品牌" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">车型</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="model" th:value="${obj.model}" required lay-verify="required" placeholder="请输入车型" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">座位数</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="seatNum" th:value="${obj.seatNum}" required lay-verify="seatNum" placeholder="请输入座位数" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">颜色</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="colour" th:value="${obj.colour}" required lay-verify="required" placeholder="请输入颜色" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">VIN码</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="vin" th:value="${obj.vin}" required lay-verify="required" placeholder="请输入VIN码" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">排量</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="cubicles" th:value="${obj.cubicles}" required lay-verify="required" placeholder="请输入排量" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">厢数</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="exhaust" th:value="${obj.exhaust}" required lay-verify="required" placeholder="请输入厢数" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">上牌时间</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="firstLicense" th:value="${#dates.format(obj.firstLicense, 'yyyy-MM-dd')}"  id="date" lay-verify="date" placeholder="请选择首次上牌日期" autocomplete="off" class="layui-input test-item">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">租金</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="rent" th:value="${obj.rent}" required lay-verify="rent" placeholder="请输入租金" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <!--<div class="layui-form-item">
+                <label class="layui-form-label">类别</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="type" value="1" title="普通" th:field="*{obj.type}" checked>
+                    <input type="radio" name="type" value="2" title="豪华" th:field="*{obj.type}">
+                </div>
+            </div>-->
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">类别</label>
+                <div class="layui-input-block">
+                    <select name="type" lay-filter="type">
+                        <option value="" th:field="*{obj.type}"></option>
+                        <option value="轿车" th:field="*{obj.type}">轿车</option>
+                        <option value="SUV" th:field="*{obj.type}">SUV</option>
+                        <option value="MPV" th:field="*{obj.type}">MPV</option>
+                    </select>
+                </div>
+            </div>
+            <!--<div class="layui-form-item">
+                <label class="layui-form-label">类别</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="isStop" value="0" title="启用" th:field="*{obj.isStop}" checked>
+                    <input type="radio" name="isStop" value="1" title="停用" th:field="*{obj.isStop}">
+                </div>
+            </div>-->
+            <div class="layui-form-item">
+                <button type="button" class="layui-btn" id="uploadImg">上传图片</button>
+                <div class="layui-upload-list">
+                    <img class="layui-upload-img" height="100" width="100" id="vehicleImg" >
+                    <input type="hidden" name="imgPath"  class="layui-input">
+                </div>
+            </div>
+
+             <button style="display:none" id="onSubmit" class="layui-btn" lay-submit lay-filter="formSubmit">立即提交</button>
+        </form>
+    </div>
+<script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+    $(function(){
+        var imgPath = [[${obj.imgPath}]];
+        console.log(imgPath);
+        console.log([[@{/uploaded/}]]+imgPath);
+        if(imgPath){
+            $("#vehicleImg").attr("src",[[@{/uploaded/}]]+imgPath);
+            $(" input[ name='imgPath' ] ").val(imgPath);
+        }
+    })
+    function onSubmit(){
+        $("#onSubmit").click();
+    }
+    layui.use(['form','laydate','upload'], function(){
+        var form = layui.form;
+        var laydate = layui.laydate;
+        var upload = layui.upload;
+        var uploadInst = upload.render({
+            elem: '#uploadImg' //绑定元素
+            ,url: [[@{/upload/uploadImg}]] //上传接口
+            ,done: function(res){
+                $("#vehicleImg").attr("src",[[@{/uploaded/}]]+res.msg);
+                $(" input[ name='imgPath' ] ").val(res.msg);
+
+            }
+        });
+
+        lay('.test-item').each(function(){
+            laydate.render({
+                elem: this
+                ,format:'yyyy-MM-dd'
+                ,type:'date'
+                ,trigger: 'click'
+            });
+        });
+
+        form.verify({
+            license: [
+                /^(([京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领][A-Z](([0-9]{5}[DF])|([DF]([A-HJ-NP-Z0-9])[0-9]{4})))|([京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领][A-Z][A-HJ-NP-Z0-9]{4}[A-HJ-NP-Z0-9挂学警港澳使领]))$/
+                ,'车牌号码错误'
+            ],
+            rent: [
+                /(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/
+                ,'金额输入错误'
+            ],
+            seatNum: [
+                /^([2-9])$/
+                ,'座位数错误'
+            ]
+        });
+
+        form.on('submit(formSubmit)', function(data){
+            var index_ = layer.load(1);
+            $.ajax({
+                url:[[@{/vehicle/save}]],
+                data:data.field,
+                type:"post",
+                dataType:"json",
+                success:function(result){
+                if(result.success){
+                    parent.layer.msg("保存成功");
+                    var index = parent.layer.getFrameIndex(window.name);
+                    parent.layer.close(index);
+                    window.parent.location.reload();
+                    //window.parent.location.replace(location.href)//刷新父级页面
+                    }else{
+                        layer.msg(result.msg);
+                    }
+                layer.close(index_);
+                },
+            });
+            return false;
+        });
+    })
+    /*]]>*/
+</script>
+</body>
+</html>

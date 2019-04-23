@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="inc">
+<body>
+<div th:fragment="content">
+    <table class="layui-hide" id="orderTable" lay-filter="test"></table>
+</div>
+<footer  th:fragment="footer">
+    <script type="text/html" id="toolbarDemo">
+        <div class="layui-input-block">
+            <div class="layui-input-inline">
+                <input id="orderNo" type="text" placeholder="请输入订单号" class="layui-input">
+            </div>
+            <div class="layui-input-inline">
+                <button class="layui-btn" lay-event="search">搜索</button>
+            </div>
+        </div>
+    </script>
+    <script type="text/html" id="barDemo">
+        {{#  if(d.orderStatus == 1){ }}
+        <a class="layui-btn layui-btn-xs" lay-event="obtain">发车</a>
+        {{#  } }}
+        {{#  if(d.orderStatus == 2){ }}
+        <a class="layui-btn layui-btn-xs" lay-event="return">还车</a>
+        {{#  } }}
+        {{#  if(d.orderStatus != 5){ }}
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="invalid">废除</a>
+        {{#  } }}
+        {{#  if(d.orderStatus == 5){ }}
+        <span class="layui-badge-dot"></span>
+        <span class="layui-badge-dot layui-bg-orange"></span>
+        <span class="layui-badge-dot layui-bg-green"></span>
+        {{#  } }}
+    </script>
+    <script th:src="@{/js/utils.js}"></script>
+    <script type="text/javascript" th:inline="javascript">
+        layui.use('table', function(){
+            var table = layui.table;
+            var orderTable = table.render({
+                elem: '#orderTable'
+                ,url:[[@{/order/getOrderTable}]]
+                ,toolbar: '#toolbarDemo'
+                ,title: '门店数据表'
+                ,limit: 10
+                ,limits: [10, 15, 20]
+                ,cols: [
+                    [
+                    {field:'id', title:'id',width:50 }
+                    ,{field:'orderNo', title:'订单号'}
+                    ,{field:'username', title:'用户', templet: '<div>{{d.user.username}}</div>'}
+                    ,{field:'vehicle', title:'车型', templet: '<div>{{d.vehicle.brand+d.vehicle.model}}</div>'}
+                    ,{field:'obtainProv', title:'取车地址', templet: function(res){
+                            return '<em>'+ res.obtainProv+'/' +res.obtainCity+'/' + res.obtainArea +'/'+res.obtainShop+'</em>'
+                        }}
+                    ,{field:'obtainTime', title:'取车时间', templet: function(res){
+                        return '<em>'+ formatDate("yyyy-MM-dd hh:mm",new Date(res.obtainTime)) +'</em>'
+                    }}
+                    ,{field:'returnProv', title:'还车地址', templet: function(res){
+                        return '<em>'+ res.returnProv+'/' +res.returnCity+'/' + res.returnArea +'/'+res.returnShop+'</em>'
+                    }}
+                    ,{field:'returnTime', title:'还车时间', templet: function(res){
+                        return '<em>'+ formatDate("yyyy-MM-dd hh:mm",new Date(res.returnTime)) +'</em>'
+                    }}
+                    ,{field:'orderStatus', title:'订单状态', templet: function(res){
+                        return orderStatus[res.orderStatus]
+                        }}
+                    ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:120}
+                ]
+            ]
+                ,page: true
+                ,done:function(res,curr,count){
+                    $(".layui-table-box").find("[data-field='id']").css("display","none");
+                }
+            });
+
+            table.on('toolbar(test)', function(obj){
+                var checkStatus = table.checkStatus(obj.config.id);
+                switch(obj.event){
+                    case 'search':
+                        orderTable.reload({
+                            where: { //设定异步数据接口的额外参数，任意设
+                                orderName: $("#orderNo").val()
+                            }
+                            ,page: {
+                                curr: 1 //重新从第 1 页开始
+                            }
+                        });
+                        break;
+                };
+            });
+
+            //监听行工具事件
+            table.on('tool(test)', function(obj){
+                var data = obj.data;
+                //console.log(obj)
+                if(obj.event === 'obtain'){
+                    layer.confirm('请确定是否发车', function(index){
+                        var index_ = layer.load(1);
+                        $.ajax({
+                            url:[[@{/order/save}]],
+                            data:{"id":data.id,"orderStatus":"2"},
+                            type:"post",
+                            dataType:"json",
+                            success:function(result){
+                            if(result.success){
+                                layer.msg("发车成功");
+                                orderTable.reload();
+                                layer.close(index);
+                            }else{
+                                layer.msg(result.msg);
+                            }
+                            layer.close(index_);
+                        },
+                    });
+                    });
+                } else if(obj.event === 'return'){
+                    layer.confirm('请确定是否还车', function(index){
+                        var index_ = layer.load(1);
+                        $.ajax({
+                            url:[[@{/order/save}]],
+                        data:{"id":data.id,"orderStatus":"3"},
+                        type:"post",
+                            dataType:"json",
+                            success:function(result){
+                            if(result.success){
+                                layer.msg("还车成功");
+                                orderTable.reload();
+                                layer.close(index);
+                            }else{
+                                layer.msg(result.msg);
+                            }
+                            layer.close(index_);
+                        },
+                    });
+                    });
+                }else if(obj.event === 'invalid'){
+                    layer.confirm('请确定是否作废此订单', function(index){
+                        var index_ = layer.load(1);
+                        $.ajax({
+                            url:[[@{/order/save}]],
+                        data:{"id":data.id,"orderStatus":"5"},
+                        type:"post",
+                            dataType:"json",
+                            success:function(result){
+                            if(result.success){
+                                layer.msg("作废成功");
+                                orderTable.reload();
+                                layer.close(index);
+                            }else{
+                                layer.msg(result.msg);
+                            }
+                            layer.close(index_);
+                        },
+                    });
+                    });
+                }
+            });
+
+        });
+    </script>
+</footer>
+</body>
+</html>
