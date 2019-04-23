@@ -142,4 +142,19 @@ public class UserController {
         }
         return result;
     }
+
+    @ResponseBody
+    @RequestMapping("/recharge")
+    public Result recharge(String id, String money){
+        Result result = new Result();
+        try {
+            User user = this.userService.findById(id);
+            user.setBalance(user.getBalance().add(new BigDecimal(money)));
+            this.userService.save(user);
+        } catch (Exception e){
+            e.printStackTrace();
+            result.setMsg(e.getMessage());
+        }
+        return result;
+    }
 }

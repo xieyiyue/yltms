@@ -661,6 +661,57 @@
     }
     /*]]>*/
 </script>
+<div class="modal fade" id="rechargePanel">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">请注意</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="recharge" class="col-form-label">充值金额</label>
+                    <input type="text" class="form-control" placeholder="用户名" id="recharge" required>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" onclick="onRecharge()">确定</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+<script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+    function onRecharge(){
+        var reg = /(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/;
+        var money = $("#recharge").val();
+        if(!reg.test(money)){
+            toastr.error("请输入有效的金额");
+            return;
+        }
+        var data = {
+            "id":$("#accountId").val(),
+            "money":"money"
+        };
+        $.ajax({
+            url:[[@{/user/recharge}]],
+        data:data,
+            type:"post",
+            dataType:"json",
+            success:function(result){
+            if(result.success){
+                toastr.success("充值成功");
+                $("#rechargePanel").modal("hide");
+                window.location.reload();
+            }else{
+                toastr.error(result.msg);
+            }
+        }
+    });
+    }
+    /*]]>*/
+</script>
 <div class="modal fade" id="payConfirm">
     <div class="modal-dialog">
         <div class="modal-content">
