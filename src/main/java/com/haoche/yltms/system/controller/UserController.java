@@ -136,6 +136,7 @@ public class UserController {
                 return result;
             }
             this.userService.save(user);
+            result.setSuccess(true);
         } catch (Exception e){
             e.printStackTrace();
             result.setMsg(e.getMessage());
@@ -151,6 +152,7 @@ public class UserController {
             User user = this.userService.findById(id);
             user.setBalance(user.getBalance().add(new BigDecimal(money)));
             this.userService.save(user);
+            result.setSuccess(true);
         } catch (Exception e){
             e.printStackTrace();
             result.setMsg(e.getMessage());

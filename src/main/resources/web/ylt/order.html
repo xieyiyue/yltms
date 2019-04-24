@@ -154,7 +154,7 @@
                 <div class="dropdown-menu">
                     <a href="#" class="dropdown-item" data-toggle="modal" aria-pressed="false" data-target="#changePass">
                         <i class="fas fa-lock"></i> 修改密码</a>
-                    <a href="#" class="dropdown-item" data-toggle="modal" aria-pressed="false" data-target="#upgradeVipPanel">
+                    <a id="vipButton" href="#" class="dropdown-item" data-toggle="modal" aria-pressed="false" data-target="#upgradeVipPanel">
                         <i class="fas fa-superpowers"></i> 升级VIP</a>
                     <a href="#" class="dropdown-item" data-toggle="modal" aria-pressed="false" data-target="#rechargePanel">
                         <i class="fas fa-money-bill-alt"></i> 充值</a>
@@ -666,12 +666,12 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h4 class="modal-title">请注意</h4>
+                <h4 class="modal-title">充值</h4>
             </div>
             <div class="modal-body">
                 <div class="form-group">
                     <label for="recharge" class="col-form-label">充值金额</label>
-                    <input type="text" class="form-control" placeholder="用户名" id="recharge" required>
+                    <input type="text" class="form-control" placeholder="金额" id="recharge" required>
                 </div>
             </div>
             <div class="modal-footer">
@@ -692,7 +692,7 @@
         }
         var data = {
             "id":$("#accountId").val(),
-            "money":"money"
+            "money":money
         };
         $.ajax({
             url:[[@{/user/recharge}]],
@@ -703,7 +703,8 @@
             if(result.success){
                 toastr.success("充值成功");
                 $("#rechargePanel").modal("hide");
-                window.location.reload();
+                $("#recharge").val("");
+                // window.location.reload();
             }else{
                 toastr.error(result.msg);
             }
@@ -829,6 +830,9 @@
             $("#yesLogin").show();
             $("#nameSpan").append(account.username);
             $("#accountId").val(account.id);
+            if(account.isVip === "1"){
+                $("#vipButton").hide();
+            }
         } else {
             $("#noLogin").show();
             $("#yesLogin").hide();

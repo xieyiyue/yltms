@@ -13,4 +13,7 @@ public interface UserRepository extends JpaRepository<User, String>, JpaSpecific
     @Query(value = "from User where username =:username and (isDelete <> 1 or isDelete is null) and type =:type")
     List<User> findByUsername(@Param("username") String username,@Param("type") String type);
 
+    @Query(value = "from User where id =:id")
+    User findOne(@Param("id") String id);
+
 }

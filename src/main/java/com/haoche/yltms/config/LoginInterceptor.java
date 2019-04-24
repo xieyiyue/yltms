@@ -1,6 +1,8 @@
 package com.haoche.yltms.config;
 
 import com.haoche.yltms.system.model.User;
+import com.haoche.yltms.system.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -15,6 +17,9 @@ import java.io.IOException;
 public class LoginInterceptor implements HandlerInterceptor {
 
     public static final String SESSION_KEY = "USER";
+
+    @Autowired
+    private UserService userService;
 
     //这个方法是在访问接口之前执行的，我们只需要在这里写验证登陆状态的业务逻辑，就可以在用户调用指定接口之前验证登陆状态了
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
@@ -34,6 +39,7 @@ public class LoginInterceptor implements HandlerInterceptor {
             }
             return false;
         }else {
+            session.setAttribute(LoginInterceptor.SESSION_KEY, userService.findById(user.getId()));
             return true;    //如果session里有user，表示该用户已经登陆，放行，用户即可继续调用自己需要的接口
         }
     }
